@@ -2846,6 +2846,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "snake-game"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+]
+
+[[package]]
 name = "spirv"
 version = "0.2.0+1.5.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3112,13 +3119,6 @@ name = "unicode-xid"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f962df74c8c05a667b5ee8bcf162993134c104e96440b663c8daa176dc772d8c"
-
-[[package]]
-name = "user-interface-proto"
-version = "0.1.0"
-dependencies = [
- "bevy",
-]
 
 [[package]]
 name = "uuid"

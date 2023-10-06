@@ -1,5 +1,5 @@
 [package]
-name = "user-interface-proto"
+name = "snake-game"
 version = "0.1.0"
 edition = "2021"
 
