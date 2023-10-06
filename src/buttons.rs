@@ -23,6 +23,9 @@ pub fn button_system(
         let mut text = text_query.get_mut(children[0]).unwrap();
         match *interaction {
             Interaction::Pressed => {
+                text.sections[0].value = "Press".to_owned();
+                *background_color = PRESSED_BUTTON.into();
+                border_color.0 = Color::RED;
                 state.set(GameState::Playing);
             }
             Interaction::Hovered => {
