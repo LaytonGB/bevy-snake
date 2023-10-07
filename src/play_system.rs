@@ -50,7 +50,14 @@ pub fn setup_play(mut commands: Commands, asset_server: Res<AssetServer>) {
                     ));
                 });
         });
+
     // main window
+    let x_lim = 10;
+    let y_lim = 10;
+    commands
+        .spawn(NodeBundle::default())
+        .insert(Play)
+        .with_children(|_parent| {}); // TODO
 }
 
 pub fn teardown_play(mut commands: Commands, mut node_query: Query<Entity, With<Play>>) {
