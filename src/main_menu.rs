@@ -10,6 +10,9 @@ pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .spawn(NodeBundle {
             style: Style {
+                display: Display::Flex,
+                flex_direction: FlexDirection::Row,
+                column_gap: Val::Px(50.0),
                 width: Val::Percent(100.0),
                 align_items: AlignItems::Center,
                 justify_content: JustifyContent::Center,
@@ -33,9 +36,35 @@ pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                     background_color: NORMAL_BUTTON.into(),
                     ..default()
                 })
+                .insert(ButtonAction::PLAY)
                 .with_children(|parent| {
                     parent.spawn(TextBundle::from_section(
-                        "Button",
+                        "Play",
+                        TextStyle {
+                            font: asset_server.load("fonts/ComicSansMS3.ttf"),
+                            font_size: 40.0,
+                            color: Color::rgb(0.9, 0.9, 0.9),
+                        },
+                    ));
+                });
+            parent
+                .spawn(ButtonBundle {
+                    style: Style {
+                        width: Val::Px(150.0),
+                        height: Val::Px(65.0),
+                        border: UiRect::all(Val::Px(5.0)),
+                        justify_content: JustifyContent::Center,
+                        align_items: AlignItems::Center,
+                        ..default()
+                    },
+                    border_color: BorderColor(Color::BLACK),
+                    background_color: NORMAL_BUTTON.into(),
+                    ..default()
+                })
+                .insert(ButtonAction::EXIT)
+                .with_children(|parent| {
+                    parent.spawn(TextBundle::from_section(
+                        "Exit",
                         TextStyle {
                             font: asset_server.load("fonts/ComicSansMS3.ttf"),
                             font_size: 40.0,
