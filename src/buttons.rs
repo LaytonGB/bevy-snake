@@ -1,6 +1,6 @@
 use bevy::{app::AppExit, prelude::*};
 
-use crate::{main_menu::*, state::*};
+use crate::state::*;
 
 pub const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
 pub const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
@@ -9,6 +9,7 @@ pub const PRESSED_BUTTON: Color = Color::rgb(0.35, 0.75, 0.35);
 #[derive(Component)]
 pub enum ButtonAction {
     PLAY,
+    MENU,
     EXIT,
 }
 
@@ -65,6 +66,10 @@ fn button_interactions(
             },
             ButtonAction::EXIT => match interaction {
                 Interaction::Pressed => app_exit_events.send(AppExit),
+                _ => (),
+            },
+            ButtonAction::MENU => match interaction {
+                Interaction::Pressed => state.set(GameState::MainMenu),
                 _ => (),
             },
         }
