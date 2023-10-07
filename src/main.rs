@@ -3,7 +3,7 @@ mod main_menu;
 mod play_system;
 mod state;
 
-use bevy::{prelude::*, winit::WinitSettings};
+use bevy::{prelude::*, window::PresentMode, winit::WinitSettings};
 use buttons::*;
 use main_menu::*;
 use play_system::*;
@@ -15,7 +15,23 @@ fn setup_camera(mut commands: Commands) {
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                title: "Snake game".into(),
+                resolution: (500.0, 580.0).into(),
+                present_mode: PresentMode::AutoNoVsync,
+                fit_canvas_to_parent: true,
+                prevent_default_event_handling: false,
+                // TODO when bevy version upgrades, enable these
+                // enabled_buttons: bevy::window::EnabledButtons {
+                //     maximize: false,
+                //     ..Default::default()
+                // },
+                // visible: false,
+                ..default()
+            }),
+            ..default()
+        }))
         .insert_resource(WinitSettings::game()) // react constantly
         // .insert_resource(WinitSettings::desktop_app()) // react to interactions
         .add_state::<GameState>()

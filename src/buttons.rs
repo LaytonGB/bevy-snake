@@ -24,18 +24,13 @@ impl Plugin for ButtonSystem {
 
 fn button_styles(
     mut interaction_query: Query<
-        (
-            &Interaction,
-            &mut BackgroundColor,
-            &mut BorderColor,
-            &Children,
-        ),
+        (&Interaction, &mut BackgroundColor, &mut BorderColor),
         (Changed<Interaction>, With<Button>),
     >,
     // mut text_query: Query<&mut Text>,
     // mut state: ResMut<NextState<GameState>>,
 ) {
-    for (interaction, mut background_color, mut border_color, children) in &mut interaction_query {
+    for (interaction, mut background_color, mut border_color) in &mut interaction_query {
         match *interaction {
             Interaction::Pressed => {
                 *background_color = PRESSED_BUTTON.into();

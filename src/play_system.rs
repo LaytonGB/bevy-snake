@@ -27,7 +27,7 @@ pub fn setup_play(mut commands: Commands, asset_server: Res<AssetServer>) {
         .with_children(|parent| {
             parent
                 .spawn(ButtonBundle { ..default() })
-                .with_children(|parent| {
+                .with_children(|_parent| {
                     // text
                 });
             parent
