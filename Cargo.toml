@@ -13,3 +13,8 @@ opt-level = 1
 
 [profile.dev.package."*"]
 opt-level = 3
+
+# see link for post-compile WASM optimization techniques https://bevy-cheatbook.github.io/platforms/wasm/size-opt.html
+[profile.release]
+opt-level = 'z'
+lto = "thin"
