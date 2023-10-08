@@ -1,9 +1,39 @@
 use bevy::prelude::*;
 
-use crate::buttons::ButtonAction;
+use crate::{buttons::ButtonAction, window::*};
+
+const HEADER_HEIGHT: f32 = 80.0;
+const HEADER_OFFSET: f32 = -HEADER_HEIGHT / 2.0;
+const GRID_SQUARES: u32 = 9;
+const GRID_SQUARE_SIZE: f32 = 500. / GRID_SQUARES as f32;
 
 #[derive(Component)]
-pub struct Play;
+pub struct Playing;
+
+#[derive(PartialEq)]
+enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
+#[derive(Component)]
+struct SnakeHead {
+    direction: Direction,
+}
+
+#[derive(Component)]
+struct Position {
+    x: i32,
+    y: i32,
+}
+
+impl Position {
+    fn new(x: i32, y: i32) -> Self {
+        Self { x, y }
+    }
+}
 
 pub fn setup_play(mut commands: Commands, asset_server: Res<AssetServer>) {
     // top banner
@@ -13,7 +43,7 @@ pub fn setup_play(mut commands: Commands, asset_server: Res<AssetServer>) {
                 top: Val::Px(0.0),
                 left: Val::Px(0.0),
                 width: Val::Percent(100.0),
-                height: Val::Px(80.0),
+                height: Val::Px(HEADER_HEIGHT),
                 display: Display::Flex,
                 justify_content: JustifyContent::SpaceBetween,
                 align_items: AlignItems::Center,
@@ -23,13 +53,14 @@ pub fn setup_play(mut commands: Commands, asset_server: Res<AssetServer>) {
             background_color: Color::CRIMSON.into(),
             ..default()
         })
-        .insert(Play)
+        .insert(Playing)
         .with_children(|parent| {
+            // empty left button
             parent
                 .spawn(ButtonBundle { ..default() })
-                .with_children(|_parent| {
-                    // text
-                });
+                .with_children(|_parent| {});
+
+            // right button
             parent
                 .spawn(ButtonBundle {
                     style: Style {
@@ -51,16 +82,49 @@ pub fn setup_play(mut commands: Commands, asset_server: Res<AssetServer>) {
                 });
         });
 
-    // main window
-    let x_lim = 10;
-    let y_lim = 10;
     commands
-        .spawn(NodeBundle::default())
-        .insert(Play)
-        .with_children(|_parent| {}); // TODO
+        .spawn((
+            SpriteBundle {
+                sprite: Sprite {
+                    color: Color::MIDNIGHT_BLUE,
+                    ..default()
+                },
+                transform: Transform {
+                    translation: Vec3::new(0.0, HEADER_OFFSET, 0.0),
+                    scale: Vec3::splat(GRID_SQUARE_SIZE),
+                    ..default()
+                },
+                ..default()
+            },
+            SnakeHead {
+                direction: Direction::Up,
+            },
+            Position::new(0, 0),
+        ))
+        .insert(Playing);
 }
 
-pub fn teardown_play(mut commands: Commands, mut node_query: Query<Entity, With<Play>>) {
+pub fn draw_grid(mut gizmos: Gizmos) {
+    // main window
+    for i in 1..GRID_SQUARES {
+        let i = i as f32 - GRID_SQUARES as f32 / 2.0;
+        gizmos.line_2d(
+            Vec2::new(GRID_SQUARE_SIZE * i, -WINDOW_HEIGHT + HEADER_OFFSET),
+            Vec2::new(GRID_SQUARE_SIZE * i, WINDOW_HEIGHT + HEADER_OFFSET),
+            Color::DARK_GRAY,
+        );
+    }
+    for i in 1..GRID_SQUARES {
+        let i = i as f32 - GRID_SQUARES as f32 / 2.0;
+        gizmos.line_2d(
+            Vec2::new(-WINDOW_WIDTH, GRID_SQUARE_SIZE * i + HEADER_OFFSET),
+            Vec2::new(WINDOW_WIDTH, GRID_SQUARE_SIZE * i + HEADER_OFFSET),
+            Color::DARK_GRAY,
+        );
+    }
+}
+
+pub fn teardown_play(mut commands: Commands, mut node_query: Query<Entity, With<Playing>>) {
     for play_entity in &mut node_query {
         commands.entity(play_entity).despawn_recursive();
     }
