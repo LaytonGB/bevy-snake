@@ -5,6 +5,7 @@ mod state;
 mod window;
 
 use bevy::{prelude::*, window::PresentMode, winit::WinitSettings};
+use bevy_egui::EguiPlugin;
 use buttons::*;
 use main_menu::*;
 use play_system::*;
@@ -39,8 +40,8 @@ fn main() {
             }),
             ..default()
         }))
-        .insert_resource(WinitSettings::game()) // react constantly
-        // .insert_resource(WinitSettings::desktop_app()) // react to interactions
+        .add_plugins(EguiPlugin)
+        .insert_resource(WinitSettings::game()) // react constantly - needed for egui
         // setup
         .add_state::<GameState>()
         .add_plugins(ButtonSystem)
