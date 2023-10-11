@@ -1,6 +1,7 @@
 mod buttons;
 mod main_menu;
 mod play_system;
+mod scoreboard;
 mod state;
 mod window;
 
@@ -9,6 +10,7 @@ use bevy_egui::EguiPlugin;
 use buttons::*;
 use main_menu::*;
 use play_system::*;
+use scoreboard::*;
 use state::*;
 use window::*;
 
@@ -53,5 +55,11 @@ fn main() {
         .add_systems(OnEnter(GameState::Playing), setup_play)
         .add_systems(Update, draw_grid.run_if(in_state(GameState::Playing)))
         .add_systems(OnExit(GameState::Playing), teardown_play)
+        // scoreboard
+        .add_systems(
+            Update,
+            scoreboard_entry.run_if(in_state(GameState::Scoreboard)),
+        )
+        // run
         .run();
 }
