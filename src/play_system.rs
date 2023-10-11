@@ -55,10 +55,26 @@ pub fn setup_play(mut commands: Commands, asset_server: Res<AssetServer>) {
         })
         .insert(Playing)
         .with_children(|parent| {
-            // empty left button
+            // left button
             parent
-                .spawn(ButtonBundle { ..default() })
-                .with_children(|_parent| {});
+                .spawn(ButtonBundle {
+                    style: Style {
+                        padding: UiRect::all(Val::Px(6.0)),
+                        ..default()
+                    },
+                    ..default()
+                })
+                .insert(ButtonAction::SCOREBOARD)
+                .with_children(|parent| {
+                    parent.spawn(TextBundle::from_section(
+                        "Scoreboard",
+                        TextStyle {
+                            font: asset_server.load("fonts/ComicSansMS3.ttf"),
+                            font_size: 30.0,
+                            color: Color::rgb(1.0, 1.0, 1.0),
+                        },
+                    ));
+                });
 
             // right button
             parent

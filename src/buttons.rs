@@ -8,8 +8,9 @@ pub const PRESSED_BUTTON: Color = Color::rgb(0.35, 0.75, 0.35);
 
 #[derive(Component)]
 pub enum ButtonAction {
-    PLAY,
     MENU,
+    PLAY,
+    SCOREBOARD,
     EXIT,
 }
 
@@ -55,18 +56,26 @@ fn button_interactions(
 ) {
     for (interaction, button_action) in &interaction_query {
         match button_action {
-            ButtonAction::PLAY => match interaction {
-                Interaction::Pressed => state.set(GameState::Playing),
-                _ => (),
-            },
-            ButtonAction::EXIT => match interaction {
-                Interaction::Pressed => app_exit_events.send(AppExit),
-                _ => (),
-            },
-            ButtonAction::MENU => match interaction {
-                Interaction::Pressed => state.set(GameState::MainMenu),
-                _ => (),
-            },
+            ButtonAction::MENU => {
+                if let Interaction::Pressed = interaction {
+                    state.set(GameState::MainMenu);
+                }
+            }
+            ButtonAction::PLAY => {
+                if let Interaction::Pressed = interaction {
+                    state.set(GameState::Playing);
+                }
+            }
+            ButtonAction::SCOREBOARD => {
+                if let Interaction::Pressed = interaction {
+                    state.set(GameState::Scoreboard);
+                }
+            }
+            ButtonAction::EXIT => {
+                if let Interaction::Pressed = interaction {
+                    app_exit_events.send(AppExit);
+                }
+            }
         }
     }
 }
