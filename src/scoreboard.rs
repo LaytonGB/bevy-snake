@@ -1,20 +1,49 @@
-use bevy::{prelude::{Component, Commands, NextState}, utils::HashMap};
+use bevy::{ecs::query::WorldQuery, prelude::*};
 use bevy_egui::{egui, EguiContexts};
 
-use crate::state::GameState;
-
 #[derive(Component)]
-struct Name(String);
+pub struct ScoreboardEntry {
+    name: String,
+    score: u32,
+}
 
-#[derive(Component)]
-struct Score(u32);
-
-pub fn setup_scoreboard(mut state: ResMut<NextState<GameState>>) {
+pub fn setup_scoreboard(mut commands: Commands) {
     // TODO load from file into hashmap
-    let scores: HashMap<String, u32> = HashMap::new();
-    if scores.values().iter().fold(Vec::with_capacity(10), |mut vec, score| {
-        // TODO keep top 10
-    })
+    let scores: Vec<(String, u32)> = Vec::new();
+    scores.iter().for_each(|(name, score)| {
+        commands.spawn(ScoreboardEntry {
+            name: name.clone(),
+            score: *score,
+        });
+    });
+}
+
+pub fn update_scoreboard_display(
+    mut commands: Commands,
+    mut contexts: EguiContexts,
+    scores: Query<&ScoreboardEntry>,
+) {
+    egui::Window::new("Scoreboard").show(contexts.ctx_mut(), |ui| {
+        ui.with_layout(
+            egui::Layout::centered_and_justified(egui::Direction::LeftToRight),
+            |ui| {
+                for score in &scores {
+                    ui.label(&score.name);
+                    ui.label(format!("{}", score.score));
+                    ui.end_row();
+                }
+            },
+        )
+    });
+}
+
+pub fn teardown_scoreboard(
+    mut commands: Commands,
+    scoreboard: Query<Entity, With<ScoreboardEntry>>,
+) {
+    for score in &scoreboard {
+        commands.entity(score).despawn();
+    }
 }
 
 pub fn scoreboard_entry(mut context: EguiContexts) {

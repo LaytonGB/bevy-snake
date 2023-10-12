@@ -56,9 +56,22 @@ fn main() {
         .add_systems(Update, draw_grid.run_if(in_state(GameState::Playing)))
         .add_systems(OnExit(GameState::Playing), teardown_play)
         // scoreboard
+        .add_systems(OnEnter(GameState::Scoreboard), setup_scoreboard)
         .add_systems(
             Update,
-            scoreboard_entry.run_if(in_state(GameState::Scoreboard)),
+            update_scoreboard_display.run_if(in_state(GameState::Scoreboard)),
+        )
+        .add_systems(
+            OnTransition {
+                from: GameState::Scoreboard,
+                to: GameState::MainMenu,
+            },
+            teardown_scoreboard,
+        )
+        // scoreboard entry
+        .add_systems(
+            Update,
+            scoreboard_entry.run_if(in_state(GameState::ScoreboardEntry)),
         )
         // run
         .run();
