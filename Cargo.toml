@@ -9,7 +9,9 @@ edition = "2021"
 bevy = { version = "0.11.3", features = ["dynamic_linking"] }
 bevy_egui = "0.22.0"
 console_error_panic_hook = "0.1"
+csv = "1.3.0"
 egui = "0.23.0"
+serde = "1.0.188"
 
 [profile.dev]
 opt-level = 1
